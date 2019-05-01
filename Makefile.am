@@ -1,0 +1,2 @@
+EXTRA_DIST = ldms-plugins-llnl.spec COPYRIGHT LICENSE-BSD LICENSE-GPL NOTICE README.md
+SUBDIRS = src man

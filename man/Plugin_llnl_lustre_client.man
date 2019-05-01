@@ -1,0 +1,60 @@
+.TH man 7 "1 May 2019" "LDMS Plugin" "LLNL Plugin for LDMS"
+
+.SH NAME
+Plugin_llnl_lustre_client - man page for the LDMS llnl_lustre_client plugin
+
+.SH SYNOPSIS
+Within ldmsd_controller or a configuration file:
+.br
+config name=llnl_lustre_client
+
+.SH DESCRIPTION
+With LDMS (Lightweight Distributed Metric Service), plugins for the ldmsd (ldms daemon) are configured via ldmsd_controller
+or a configuration file. The llnl_lustre_client plugin provide a metric set for each of the lustre client
+mounts found on a node.  The schema is named "llnl_lustre_client".  The data for the metric sets is
+generally found in /proc/fs/lustre/llite/*/stats.
+
+This plugin currently employs zero configuration.  The producer name is set to the hostname, and the metric set instance names are
+derived from the llite instance name.  Any user-supplied configuration values will be ignored.  Future versions may add
+configuration options.
+
+This plugin should work with at least Lustre versions 2.8 and 2.10.  It will not currently
+work with Lustre 2.12 because the llite stats were relocated from /proc to a permission restricted
+area under debugfs.
+
+NOTE: This plugin is only expected to be fully function in an ovis v4 release
+in which the ldms_set_delete() function is fixed.  (Which specific v4 release
+will have the fix is unknown at the time of writing.)  It will _mostly_ work
+with ovis v3, but an llite name such as "lquake-ffff000a000b7800" can never
+be reused once it disappears from /proc.  This is not likely to be a problem
+most of the time, but if it ever happens an ldmsd daemon restart will be
+required to use the name again.
+
+.SH CONFIGURATION ATTRIBUTE SYNTAX
+
+.TP
+.BR config
+name=<plugin_name>
+.br
+configuration line
+.RS
+.TP
+name=<plugin_name>
+.br
+This MUST be llnl_lustre_client.
+.RE
+
+.SH BUGS
+No known bugs.
+
+.SH EXAMPLES
+.PP
+Within ldmsd_controller or a configuration file:
+.nf
+load name=llnl_lustre_client
+config name=llnl_lustre_client
+start name=llnl_lustre_client interval=1000000
+.fi
+
+.SH SEE ALSO
+ldmsd(8), ldms_quickstart(7), ldmsd_controller(8), ldms_sampler_base(7)

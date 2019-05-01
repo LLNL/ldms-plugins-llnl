@@ -1,0 +1,22 @@
+Intellectual Property Notice
+------------------------------
+
+ldms-plugins-llnl is licensed under the terms of both the GNU General Public
+License, Version 2 (LICENSE-GPL) and the BSD 3-Clause License (LICENSE-BSD).
+Users may choose either license, at their option.
+
+Copyrights and patents in the ldms-plugins-llnl project are retained by
+contributors.  No copyright assignment is required to contribute to
+ldms-plugins-llnl.
+
+SPDX usage
+------------
+
+Individual files contain SPDX tags instead of the full license text.
+This enables machine processing of license information based on the SPDX
+License Identifiers that are available here: https://spdx.org/licenses/
+
+Files that are dual-licensed as GPLv2 OR BSD contain the following
+text in the license header:
+
+    SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-3-Clause)
