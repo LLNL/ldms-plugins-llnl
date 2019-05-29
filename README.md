@@ -1,3 +1,9 @@
+The plugins in ldms-plugins-llnl compile against LDMS v3.  They will likely
+also compile against LDLMS v4 when that is released.
+
+The llnl_lustre_client plugin is fully functional against LDMS v3.  The llnl_lustre_mdt
+and llnl_lustre_ost plugins will require an LDMS v4 that fixes ldms_set_delete().
+
 License
 ----------------
 
