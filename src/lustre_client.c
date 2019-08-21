@@ -10,6 +10,8 @@
 #include <dirent.h>
 #include <coll/rbt.h>
 #include <sys/queue.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <ldms/ldms.h>
 #include <ldms/ldmsd.h>
@@ -18,8 +20,12 @@
 
 #define _GNU_SOURCE
 
-#define LLITE_PATH "/proc/fs/lustre/llite"
-#define OSD_SEARCH_PATH "/proc/fs/lustre"
+/* locations where llite stats might be found */
+static const char * const llite_paths[] = {
+        "/proc/fs/lustre/llite",          /* lustre pre-2.12 */
+        "/sys/kernel/debug/lustre/llite"  /* lustre 2.12 and later */
+};
+static const int llite_paths_len = sizeof(llite_paths) / sizeof(llite_paths[0]);
 
 ldmsd_msg_log_f log_fn;
 char producer_name[LDMS_PRODUCER_NAME_MAX];
@@ -44,7 +50,7 @@ static int string_comparator(void *a, const void *b)
 static struct llite_data *llite_create(const char *llite_name, const char *basedir)
 {
         struct llite_data *llite;
-        char path_tmp[PATH_MAX]; /* TODO: move large stack allocation to heap */
+        char path_tmp[PATH_MAX];
         char *state;
 
         log_fn(LDMSD_LDEBUG, SAMP" llite_create() %s from %s\n",
@@ -118,14 +124,45 @@ static void llites_destroy()
         }
 }
 
-/* List subdirectories in LLITE_PATH to get list of
-   LLITE names.  Create llite_data structures for any LLITES any that we
+/* Different versions of Lustre put the llite client stats in different place.
+   Returns a pointer to a path, or NULL if no llite directory found anywhere.
+ */
+static const char *const find_llite_path()
+{
+        static const char *previously_found_path = NULL;
+        struct stat sb;
+        int i;
+
+        for (i = 0; i < llite_paths_len; i++) {
+                if (stat(llite_paths[i], &sb) == -1 || !S_ISDIR(sb.st_mode))
+                        continue;
+                if (previously_found_path != llite_paths[i]) {
+                        /* just for logging purposes */
+                        previously_found_path = llite_paths[i];
+                        log_fn(LDMSD_LDEBUG, SAMP" find_llite_path() found %s\n",
+                               llite_paths[i]);
+                }
+                return llite_paths[i];
+        }
+
+        log_fn(LDMSD_LWARNING, SAMP" no llite directories found\n");
+        return NULL;
+}
+
+/* List subdirectories in llite_path to get list of
+   LLITE names.  Create llite_data structures for any LLITEs that we
    have not seen, and delete any that we no longer see. */
 static void llites_refresh()
 {
+        const char *llite_path;
         struct dirent *dirent;
         DIR *dir;
         struct rbt new_llite_tree;
+
+        llite_path = find_llite_path();
+        if (llite_path == NULL) {
+                return;
+        }
 
         rbt_init(&new_llite_tree, string_comparator);
 
@@ -134,11 +171,10 @@ static void llites_refresh()
            cached in the global llite_tree (in which case we move them
            from llite_tree to new_llite_tree), or they can be newly allocated
            here. */
-
-        dir = opendir(LLITE_PATH);
+        dir = opendir(llite_path);
         if (dir == NULL) {
                 log_fn(LDMSD_LWARNING, SAMP" unable to open llite dir %s\n",
-                       LLITE_PATH);
+                       llite_path);
                 return;
         }
         while ((dirent = readdir(dir)) != NULL) {
@@ -155,7 +191,7 @@ static void llites_refresh()
                                            llite_tree_node);
                         rbt_del(&llite_tree, &llite->llite_tree_node);
                 } else {
-                        llite = llite_create(dirent->d_name, LLITE_PATH);
+                        llite = llite_create(dirent->d_name, llite_path);
                 }
                 if (llite == NULL)
                         continue;
