@@ -14,4 +14,10 @@
 #define SAMP "lustre_client"
 
 extern ldmsd_msg_log_f log_fn;
+
+#ifndef RBT_FOREACH
+#define RBT_FOREACH(rbn, rbt) \
+        for ((rbn) = rbt_min((rbt)); (rbn); (rbn) = rbn_succ((rbn)))
+#endif
+
 #endif /* __LUSTRE_LLITE_H */
