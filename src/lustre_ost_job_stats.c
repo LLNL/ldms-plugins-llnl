@@ -128,7 +128,7 @@ static struct ost_job_stats_data *ost_job_stats_data_create(const char *producer
         ldms_metric_array_set_str(job_stats->metric_set, index, ost_name);
         index = ldms_metric_by_name(job_stats->metric_set, "job_id");
         ldms_metric_array_set_str(job_stats->metric_set, index, jobid);
-#if !HAVE_DECL_LDMS_SET_PUBLISH
+#if HAVE_DECL_LDMS_SET_PUBLISH
         ldms_set_publish(job_stats->metric_set);
 #endif
         return job_stats;
@@ -145,7 +145,7 @@ static void ost_job_stats_data_destroy(struct ost_job_stats_data *job_stats)
 {
         log_fn(LDMSD_LDEBUG, SAMP" ost_job_stats_data_destroy() jobid=%s\n",
                job_stats->jobid);
-#if !HAVE_DECL_LDMS_SET_PUBLISH
+#if HAVE_DECL_LDMS_SET_PUBLISH
         ldms_set_unpublish(job_stats->metric_set);
 #endif
         ldms_set_delete(job_stats->metric_set);

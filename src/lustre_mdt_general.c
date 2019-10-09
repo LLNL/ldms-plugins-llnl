@@ -188,7 +188,7 @@ static void osd_sample(const char *osd_path, ldms_set_t general_metric_set)
 
 void mdt_general_destroy(ldms_set_t set)
 {
-#if !HAVE_DECL_LDMS_SET_PUBLISH
+#if HAVE_DECL_LDMS_SET_PUBLISH
         ldms_set_unpublish(set);
 #endif
         ldms_set_delete(set);
@@ -212,7 +212,7 @@ ldms_set_t mdt_general_create(const char *producer_name, const char *fs_name,
         ldms_metric_array_set_str(set, index, fs_name);
         index = ldms_metric_by_name(set, "mdt");
         ldms_metric_array_set_str(set, index, mdt_name);
-#if !HAVE_DECL_LDMS_SET_PUBLISH
+#if HAVE_DECL_LDMS_SET_PUBLISH
         ldms_set_publish(set);
 #endif
         return set;
