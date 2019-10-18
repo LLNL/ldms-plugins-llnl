@@ -1,9 +1,5 @@
 # Declare rpmbuild --with/--without parameters
-%ifarch ppc64le
-%bcond_without dcgm
-%else
 %bcond_with dcgm
-%endif
 
 Summary: Miscellaneous LDMS plugins from LLNL
 Name: @PACKAGE_NAME@
@@ -64,5 +60,5 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Thu May 06 2019 Christopher J. Morrone <morrone2@llnl.gov> - ldms-plugins-llnl
+* Mon May 06 2019 Christopher J. Morrone <morrone2@llnl.gov> - ldms-plugins-llnl
 - Initial build.
