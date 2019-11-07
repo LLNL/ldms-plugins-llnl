@@ -343,21 +343,22 @@ static int parse_fields_value(const char *fields_str, unsigned short **fields_ou
                 token = strtok_r(tmp, ",", &saveptr);
                 if (token == NULL)
                         break;
-                new_fields = realloc(fields, sizeof(unsigned short)*count);
+                new_fields = realloc(fields, sizeof(unsigned short)*(count+1));
                 if (new_fields == NULL) {
                         log_fn(LDMSD_LERROR, SAMP" parse_fields_value() realloc failed: %d", errno);
-                        free(tmp_fields);
-                        free(fields);
-                        return -1;
+                        goto err1;
                 }
                 fields = new_fields;
                 errno = 0;
                 fields[count] = strtol(token, NULL, 10);
                 if (errno != 0) {
                         log_fn(LDMSD_LERROR, SAMP" parse_fields_value() conversion error: %d\n", errno);
-                        free(tmp_fields);
-                        free(fields);
-                        return -1;
+                        goto err1;
+                }
+                if (fields[count] >= DCGM_FI_MAX_FIELDS) {
+                        log_fn(LDMSD_LERROR, SAMP" parse_fields_value() field values must be less than %d\n",
+                               DCGM_FI_MAX_FIELDS);
+                        goto err1;
                 }
         }
 
@@ -365,6 +366,11 @@ static int parse_fields_value(const char *fields_str, unsigned short **fields_ou
         *fields_out = fields;
         *fields_len_out = count;
         return 0;
+
+err1:
+        free(tmp_fields);
+        free(fields);
+        return -1;
 }
 
 /**************************************************************************
