@@ -197,7 +197,7 @@ static int dcgm_init()
         }
 
         rc = dcgmWatchFields(dcgm_handle, gpu_group_id, field_group_id,
-                             conf.interval, 60.0, 60.0);
+                             conf.interval, (double)(conf.interval*3)/1000000, 50);
         if (rc != DCGM_ST_OK){
                 log_fn(LDMSD_LERROR, SAMP" dcgmWatchFields failed: %s(%d)\n",
                        errorString(rc), rc);
