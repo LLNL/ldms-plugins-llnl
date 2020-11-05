@@ -25,6 +25,10 @@ AS_IF([test "x$with_dcgm" != xno],
       [have_dcgm=false])
 AM_CONDITIONAL([HAVE_DCGM], [test x$have_dcgm = xtrue])
 
+AC_LIB_HAVE_LINKFLAGS([ldms], [], [#include <ldms/ldms.h>])
+AS_IF([test "x$HAVE_LIBLDMS" != xyes],
+	[AC_MSG_ERROR([libldms of ldms/ldms.h not found])])
+
 AC_CONFIG_FILES([ldms-plugins-llnl.spec
                  Makefile
                  src/Makefile

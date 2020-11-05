@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-COMMON_LIBADD = -lldms -lcoll
+COMMON_LIBADD = $(LTLIBLDMS) -lcoll
 COMMON_LDFLAGS = -no-undefined \
         -export-symbols-regex 'get_plugin' \
         -version-info 1:0:0
