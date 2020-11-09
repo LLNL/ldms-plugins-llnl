@@ -5,6 +5,10 @@ COMMON_LDFLAGS = -no-undefined \
         -export-symbols-regex 'get_plugin' \
         -version-info 1:0:0
 
+noinst_LTLIBRARIES = libjobid_helper.la
+libjobid_helper_la_SOURCES = jobid_helper.c jobid_helper.h
+libjobid_helper_la_LIBADD = $(COMMON_LIBADD)
+
 ldmsplugindir = ${libdir}/ovis-ldms
 ldmsplugin_LTLIBRARIES =
 
@@ -38,7 +42,7 @@ libllnl_lustre_client_la_SOURCES = \
 	lustre_client_general.c \
 	lustre_client.h \
 	lustre_client_general.h
-libllnl_lustre_client_la_LIBADD = $(COMMON_LIBADD)
+libllnl_lustre_client_la_LIBADD = libjobid_helper.la $(COMMON_LIBADD)
 libllnl_lustre_client_la_LDFLAGS = $(COMMON_LDFLAGS)
 ldmsplugin_LTLIBRARIES += libllnl_lustre_client.la
 

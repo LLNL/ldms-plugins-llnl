@@ -113,10 +113,10 @@ static struct ost_job_stats_data *ost_job_stats_data_create(const char *producer
         job_stats->jobid = strdup(jobid);
         if (job_stats->jobid == NULL)
                 goto out2;
-        job_stats->metric_set = ldms_set_new(instance_name,
-                                             ost_job_stats_schema);
         snprintf(instance_name, sizeof(instance_name), "%s/%s/%s",
                  producer_name, ost_name, jobid);
+        job_stats->metric_set = ldms_set_new(instance_name,
+                                             ost_job_stats_schema);
         if (job_stats->metric_set == NULL)
                 goto out3;
         rbn_init(&job_stats->job_stats_node, job_stats->jobid);
