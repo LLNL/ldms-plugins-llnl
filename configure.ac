@@ -1,4 +1,4 @@
-AC_INIT([ldms-plugins-llnl], [1.5])
+AC_INIT([ldms-plugins-llnl], [1.6])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_PROG_CC
