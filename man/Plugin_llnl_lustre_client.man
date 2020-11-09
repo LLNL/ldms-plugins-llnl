@@ -6,7 +6,7 @@ Plugin_llnl_lustre_client - man page for the LDMS llnl_lustre_client plugin
 .SH SYNOPSIS
 Within ldmsd_controller or a configuration file:
 .br
-config name=llnl_lustre_client [ <attr>=<value> ]
+config name=llnl_lustre_client
 
 .SH DESCRIPTION
 With LDMS (Lightweight Distributed Metric Service), plugins for the ldmsd (ldms daemon) are configured via ldmsd_controller
@@ -32,7 +32,7 @@ required to use the name again.
 
 .TP
 .BR config
-name=<plugin_name> [job_set=<metric set name>]
+name=<plugin_name>
 .br
 configuration line
 .RS
@@ -40,10 +40,6 @@ configuration line
 name=<plugin_name>
 .br
 This MUST be llnl_lustre_client.
-.TP
-job_set=<metric set name>
-.br
-The name of the metric set that contains the job id information (default=job_id)
 .RE
 
 .SH BUGS

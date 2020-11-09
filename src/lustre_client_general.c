@@ -15,7 +15,6 @@
 #include <ldms/ldmsd.h>
 #include "lustre_client.h"
 #include "lustre_client_general.h"
-#include "jobid_helper.h"
 
 static ldms_schema_t llite_general_schema;
 
@@ -76,9 +75,6 @@ int llite_general_schema_init(const char *producer_name)
         sch = ldms_schema_new("llnl_lustre_client");
         if (sch == NULL)
                 goto err1;
-	rc = jobid_helper_schema_add(sch);
-	if (rc <0)
-		goto err2;
         rc = ldms_schema_meta_array_add(sch, "fs_name", LDMS_V_CHAR_ARRAY, 64);
         if (rc < 0)
                 goto err2;
@@ -175,7 +171,6 @@ static void llite_stats_sample(const char *stats_path,
         }
 
         ldms_transaction_begin(general_metric_set);
-	jobid_helper_metric_update(general_metric_set);
         while (fgets(buf, sizeof(buf), sf)) {
                 uint64_t val1, val2;
                 int rc;
