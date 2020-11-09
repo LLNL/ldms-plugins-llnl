@@ -20,10 +20,8 @@ jobs:
       run: git fetch -f origin ${{ github.ref }}:${{ github.ref }}
     - name: Verify tag is annotated
       run: if test x$(git for-each-ref ${{ github.ref }} | awk '{print $2}') = xtag; then /bin/true; else echo "\"${{ github.ref }}\" does not look like an annotated tag!"; /bin/false; fi
-    - name: autogen.sh
-      run: sh autogen.sh
-    - name: configure
-      run: ./configure
+    - run: ./bootstrap
+    - run: ./configure
     - name: make dist
       run: |
         make dist
