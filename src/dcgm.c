@@ -17,6 +17,7 @@
 #include <ldms/ldms.h>
 #include <ldms/ldmsd.h>
 #include <dcgm_agent.h>
+#include "jobid_helper.h"
 
 #define _GNU_SOURCE
 
@@ -266,6 +267,7 @@ static int gpu_schema_create()
         sch = ldms_schema_new(conf.schema_name);
         if (sch == NULL)
                 goto err1;
+        jobid_helper_schema_add(sch);
         rc = ldms_schema_meta_add(sch, "gpu_id", LDMS_V_S32);
         if (rc < 0)
                 goto err2;
@@ -307,6 +309,7 @@ static int gpu_sample()
 
         for (i = 0; i < gpu_ids_count; i++) {
                 ldms_transaction_begin(gpu_sets[gpu_ids[i]]);
+                jobid_helper_metric_update(gpu_sets[gpu_ids[i]]);
         }
         rc = dcgmGetLatestValues(dcgm_handle, gpu_group_id, field_group_id,
                                  &sample_cb, NULL);
@@ -386,6 +389,7 @@ static int config(struct ldmsd_plugin *self,
 
         log_fn(LDMSD_LDEBUG, SAMP" config() called\n");
 
+        jobid_helper_config(avl);
         value = av_value(avl, "interval");
         if (value == NULL) {
                 log_fn(LDMSD_LERROR, SAMP" config() \"interval\" option missing\n");

@@ -17,6 +17,7 @@
 #include <ldms/ldmsd.h>
 #include "lustre_client.h"
 #include "lustre_client_general.h"
+#include "jobid_helper.h"
 
 #define _GNU_SOURCE
 
@@ -226,6 +227,7 @@ static int config(struct ldmsd_plugin *self,
                   struct attr_value_list *kwl, struct attr_value_list *avl)
 {
         log_fn(LDMSD_LDEBUG, SAMP" config() called\n");
+	jobid_helper_config(avl);
         return 0;
 }
 

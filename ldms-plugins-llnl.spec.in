@@ -1,20 +1,20 @@
 # Declare rpmbuild --with/--without parameters
 %bcond_with dcgm
 
+%global tarball_version @PACKAGE_VERSION@
+
 Summary: Miscellaneous LDMS plugins from LLNL
 Name: @PACKAGE_NAME@
-Version: @PACKAGE_VERSION@
+Version: %(echo %{tarball_version} | tr '-' '_')
 Release: 1%{?dist}
 License: GPL
 Group: System Environment/Base
 URL: https://github.com/llnl/ldms-plugins-llnl
 Packager: Christopher J. Morrone <morrone2@llnl.gov>
-Source0: %{name}-%{version}.tar.gz
+Source0: %{name}-%{tarball_version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: ovis-devel >= 3.0.0
-BuildConflicts: ovis-devel >= 4.0.0
-Requires: ovis >= 3.0.0
-Conflicts: ovis >= 4.0.0
+BuildRequires: ovis-ldms-devel >= 4.3.4
+Requires: ovis-ldms >= 4.3.4
 
 %if %{with dcgm}
 %package dcgm
@@ -31,7 +31,7 @@ Requires: datacenter-gpu-manager >= 1.6.3
 %endif
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{tarball_version}
 
 %build
 # The --build-id flag is necessary to make find-debuginfo.sh happy with

@@ -6,7 +6,7 @@ Plugin_llnl_dcgm - man page for the LDMS llnl_dcgm plugin
 .SH SYNOPSIS
 Within ldmsd_controller or a configuration file:
 .br
-config name=llnl_dcgm
+config name=llnl_dcgm [ <attr>=<value> ]
 
 .SH DESCRIPTION
 With LDMS (Lightweight Distributed Metric Service), plugins for the ldmsd (ldms daemon) are configured via ldmsd_controller
@@ -17,7 +17,7 @@ The schema is named "llnl_dcgm" by default.
 
 .TP
 .BR config
-name=<plugin_name> interval=<interval(us)> [fields=<fields>] [schema=<schema_name>]
+name=<plugin_name> interval=<interval(us)> [fields=<fields>] [schema=<schema_name>] [job_set=<metric set name>]
 .br
 configuration line
 .RS
@@ -41,6 +41,10 @@ schema=<schema_name>
 .br
 The schema name defaults to "llnl_dcgm", but it can be renamed at the
 user's choice.
+.TP
+job_set=<metric set name>
+.br
+The name of the metric set that contains the job id information (default=job_id)
 .RE
 
 .SH BUGS
