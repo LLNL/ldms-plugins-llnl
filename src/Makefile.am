@@ -53,3 +53,11 @@ libllnl_dcgm_la_LIBADD = $(COMMON_LIBADD) -ldcgm
 libllnl_dcgm_la_LDFLAGS = $(COMMON_LDFLAGS)
 ldmsplugin_LTLIBRARIES += libllnl_dcgm.la
 endif
+
+if HAVE_INFINIBAND
+libllnl_ibmad_la_SOURCES = ibmad.c
+libllnl_ibmad_la_CPPFLAGS = -I /usr/include/infiniband
+libllnl_ibmad_la_LIBADD = libjobid_helper.la $(COMMON_LIBADD) -libmad -libumad
+libllnl_ibmad_la_LDFLAGS = $(COMMON_LDFLAGS)
+ldmsplugin_LTLIBRARIES += libllnl_ibmad.la
+endif

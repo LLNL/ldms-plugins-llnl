@@ -31,6 +31,22 @@ AS_IF([test "x$with_dcgm" != xno],
          ])],
       [have_dcgm=false])
 
+AC_ARG_WITH([ibmad],
+  [AS_HELP_STRING([--with-infiniband],
+    [Include infiniband plugins @<:@default=check@:>@])],
+  [],
+  [with_infiniband=check])
+LIBINFINIBAND=
+AS_IF([test "x$with_infiniband" != xno],
+      [AC_CHECK_LIB([ibmad], [mad_rpc_open_port],
+         [have_infiniband=true],
+         [have_infiniband=false
+          if test "x$with_infiniband" != xcheck; then
+            AC_MSG_FAILURE([--with-infiniband was given, but test for infiniband failed])
+          fi
+         ])],
+      [have_infiniband=false])
+
 AC_LIB_HAVE_LINKFLAGS([ldms], [], [#include <ldms/ldms.h>])
 AS_IF([test "x$HAVE_LIBLDMS" != xyes],
 	[AC_MSG_ERROR([libldms of ldms/ldms.h not found])])
@@ -41,6 +57,7 @@ AC_CHECK_DECLS([ldms_set_publish],[],[],[#include <ldms/ldms.h>])
 ]) dnl not enable_dist
 
 AM_CONDITIONAL([HAVE_DCGM], [test x$have_dcgm = xtrue])
+AM_CONDITIONAL([HAVE_INFINIBAND], [test x$have_infiniband = xtrue])
 
 AC_CONFIG_FILES([ldms-plugins-llnl.spec
                  Makefile

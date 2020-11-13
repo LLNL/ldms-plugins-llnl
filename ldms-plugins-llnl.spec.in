@@ -1,5 +1,6 @@
 # Declare rpmbuild --with/--without parameters
 %bcond_with dcgm
+%bcond_without infiniband
 
 %global tarball_version @PACKAGE_VERSION@
 
@@ -15,6 +16,12 @@ Source0: %{name}-%{tarball_version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: ovis-ldms-devel >= 4.3.4
 Requires: ovis-ldms >= 4.3.4
+%if %{with infiniband}
+BuildRequires: infiniband-diags-devel
+BuildRequires: rdma-core-devel
+Requires: infiniband-diags-devel
+Requires: rdma-core-devel
+%endif
 
 %if %{with dcgm}
 %package dcgm
@@ -37,7 +44,8 @@ Requires: datacenter-gpu-manager >= 1.6.3
 # The --build-id flag is necessary to make find-debuginfo.sh happy with
 # the shared libraries that are built.
 %configure LDFLAGS=-Wl,--build-id \
-    %{?with_dcgm:--with-dcgm}%{!?with_dcgm:--without-dcgm}
+    %{?with_dcgm:--with-dcgm}%{!?with_dcgm:--without-dcgm} \
+    %{?with_infiniband:--with-infiniband}%{!?with_infiniband:--without-infiniband}
 make
 
 %install
@@ -51,6 +59,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_libdir}/*/*lustre*
 %{_mandir}/*/*lustre*
+%if %{with infiniband}
+%{_libdir}/*/*ibmad*
+%{_mandir}/*/*ibmad*
+%endif
 
 %if %{with dcgm}
 %files dcgm
