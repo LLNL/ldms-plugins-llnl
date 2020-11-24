@@ -19,6 +19,7 @@ Requires: ovis-ldms >= 4.3.4
 %if %{with infiniband}
 BuildRequires: infiniband-diags-devel
 BuildRequires: rdma-core-devel
+BuildRequires: opensm-devel
 Requires: infiniband-diags-devel
 Requires: rdma-core-devel
 %endif
