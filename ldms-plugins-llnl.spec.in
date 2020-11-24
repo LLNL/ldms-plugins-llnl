@@ -22,6 +22,8 @@ BuildRequires: rdma-core-devel
 Requires: infiniband-diags-devel
 Requires: rdma-core-devel
 %endif
+BuildRequires: openssl-devel
+Requires: openssl-devel
 
 %if %{with dcgm}
 %package dcgm
