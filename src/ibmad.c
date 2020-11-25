@@ -27,6 +27,9 @@
 
 #define SAMP "ibmad"
 
+/* So far I cannot find a header that defines these for us */
+#define PORT_STATE_ACTIVE 4
+
 static struct {
         char *schema_name;
 	bool use_rate_metrics;
@@ -373,6 +376,12 @@ static void metrics_tree_refresh()
 				continue;
 			else
 				cnt++;
+
+			if (ca.ports[j]->state != PORT_STATE_ACTIVE) {
+				log_fn(LDMSD_LDEBUG, SAMP" metric_tree_refresh() skipping non-active ca %s port %d\n",
+				       ca.ports[j]->ca_name, ca.ports[j]->portnum);
+				continue;
+			}
 
 			snprintf(instance, sizeof(instance), "%s/%s.%d",
 				 producer_name,
