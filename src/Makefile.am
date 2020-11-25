@@ -49,7 +49,7 @@ ldmsplugin_LTLIBRARIES += libllnl_lustre_client.la
 if HAVE_DCGM
 # nvidia dcgm plugin
 libllnl_dcgm_la_SOURCES = dcgm.c
-libllnl_dcgm_la_LIBADD = $(COMMON_LIBADD) -ldcgm
+libllnl_dcgm_la_LIBADD = libjobid_helper.la $(COMMON_LIBADD) -ldcgm
 libllnl_dcgm_la_LDFLAGS = $(COMMON_LDFLAGS)
 ldmsplugin_LTLIBRARIES += libllnl_dcgm.la
 endif
