@@ -218,7 +218,7 @@ static int string_comparator(void *a, const void *b)
  * \return 0 if success.
  * \return Error number if error.
  */
-int mad_port_open(struct metric_data *data, const char *ca_name, unsigned base_lid)
+static int _port_open(struct metric_data *data, const char *ca_name, unsigned base_lid)
 {
 	int mgmt_classes[3] = {IB_SMI_CLASS, IB_SA_CLASS, IB_PERFORMANCE_CLASS};
 	int rc;
@@ -243,8 +243,9 @@ int mad_port_open(struct metric_data *data, const char *ca_name, unsigned base_l
 	p = pma_query_via(rcvbuf, &data->portid, data->port, 0,
 			  CLASS_PORT_INFO, data->srcport);
 	if (!p) {
-		log_fn(LDMSD_LERROR, SAMP ": pma_query_via ca_name=%s port=%d"
+		log_fn(LDMSD_LDEBUG, SAMP ": pma_query_via() failed: ca_name=%s port=%d"
 				"  %d\n", ca_name, data->port, errno);
+		mad_rpc_close_port(data->srcport);
 		return -1;
 	}
 	memcpy(&cap, rcvbuf + 2, sizeof(cap));
@@ -252,7 +253,7 @@ int mad_port_open(struct metric_data *data, const char *ca_name, unsigned base_l
 			| IB_PM_EXT_WIDTH_NOIETF_SUP);
 
 	if (!data->ext) {
-		log_fn(LDMSD_LINFO, SAMP ": WARNING: Extended query not "
+		log_fn(LDMSD_LDEBUG, SAMP ": WARNING: Extended query not "
 			"supported for %s:%d, the sampler will reset "
 			"counters every query\n", ca_name, data->port);
 	}
@@ -265,7 +266,7 @@ int mad_port_open(struct metric_data *data, const char *ca_name, unsigned base_l
  *
  * This function only close IB port.
  */
-void mad_port_close(struct metric_data *data)
+static void _port_close(struct metric_data *data)
 {
 	if (data->srcport)
 		mad_rpc_close_port(data->srcport);
@@ -297,9 +298,8 @@ static struct metric_data *ibmad_metric_create(const char *instance,
 	ldms_metric_array_set_str(data->metric_set,  metric_ca_name_index, ca_name);
 	ldms_metric_set_u32(data->metric_set, metric_port_index, port);
 
-	rc = mad_port_open(data, ca_name, base_lid);
+	rc = _port_open(data, ca_name, base_lid);
 	if (rc != 0) {
-		log_fn(LDMSD_LERROR, SAMP" mod_port_open failed: %d\n", rc);
 		goto out4;
 	}
 
@@ -327,7 +327,7 @@ static void ibmad_metric_destroy(struct metric_data *data)
         ldms_set_unpublish(data->metric_set);
 #endif
         ldms_set_delete(data->metric_set);
-	mad_port_close(data);
+	_port_close(data);
         free(data->instance);
 	free(data);
 }
@@ -513,7 +513,6 @@ static void metrics_tree_sample()
                 struct metric_data *data;
 
                 data = container_of(rbn, struct metric_data, metrics_node);
-		/* FIXME update the metric sets here */
 		metric_sample(data, dt);
         }
 
