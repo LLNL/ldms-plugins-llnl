@@ -6,6 +6,8 @@ AC_PROG_CC
 AM_PROG_AR
 LT_INIT
 
+dnl AC_LIB_RPATH
+
 AC_ARG_ENABLE([dist],
   [AS_HELP_STRING([--with-dcgm],
     [Include plugin for Nvidia DCGM @<:@default=check@:>@])],
