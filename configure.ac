@@ -1,5 +1,5 @@
 AC_INIT([ldms-plugins-llnl],
-        m4_esyscmd([config/git-version-gen --prefix '' .tarball-version]))
+        m4_esyscmd([build-aux/git-version-gen --prefix '' .tarball-version]))
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
