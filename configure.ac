@@ -1,12 +1,15 @@
 AC_INIT([ldms-plugins-llnl],
         m4_esyscmd([config/git-version-gen --prefix '' .tarball-version]))
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_PROG_CC
+gl_EARLY
 AM_PROG_AR
 LT_INIT
 
-dnl AC_LIB_RPATH
+gl_INIT
 
 AC_ARG_ENABLE([dist],
   [AS_HELP_STRING([--with-dcgm],
@@ -51,7 +54,7 @@ AS_IF([test "x$with_infiniband" != xno],
 
 AC_LIB_HAVE_LINKFLAGS([ldms], [], [#include <ldms/ldms.h>])
 AS_IF([test "x$HAVE_LIBLDMS" != xyes],
-	[AC_MSG_ERROR([libldms of ldms/ldms.h not found])])
+	[AC_MSG_ERROR([libldms or ldms/ldms.h not found])])
 
 # ldms_set_publish/unplish are not exported until ovis v4
 AC_CHECK_DECLS([ldms_set_publish],[],[],[#include <ldms/ldms.h>])
@@ -63,6 +66,7 @@ AM_CONDITIONAL([HAVE_INFINIBAND], [test x$have_infiniband = xtrue])
 
 AC_CONFIG_FILES([ldms-plugins-llnl.spec
                  Makefile
+                 lib/Makefile
                  src/Makefile
                  man/Makefile])
 
