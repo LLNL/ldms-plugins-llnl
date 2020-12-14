@@ -17,6 +17,7 @@
 #include <ldms/ldms.h>
 #include <ldms/ldmsd.h>
 #include <dcgm_agent.h>
+#include "config.h"
 #include "jobid_helper.h"
 
 #define _GNU_SOURCE
@@ -516,7 +517,7 @@ static struct ldmsd_sampler nvidia_dcgm_plugin = {
 struct ldmsd_plugin *get_plugin(ldmsd_msg_log_f pf)
 {
         log_fn = pf;
-        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called\n");
+        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called ("PACKAGE_STRING")\n");
         gethostname(producer_name, sizeof(producer_name));
 
         return &nvidia_dcgm_plugin.base;

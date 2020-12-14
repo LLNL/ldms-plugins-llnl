@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <ldms/ldms.h>
 #include <ldms/ldmsd.h>
+#include "config.h"
 #include "lustre_client.h"
 #include "lustre_client_general.h"
 #include "jobid_helper.h"
@@ -280,7 +281,7 @@ static struct ldmsd_sampler llite_plugin = {
 struct ldmsd_plugin *get_plugin(ldmsd_msg_log_f pf)
 {
         log_fn = pf;
-        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called\n");
+        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called ("PACKAGE_STRING")\n");
         rbt_init(&llite_tree, string_comparator);
         gethostname(producer_name, sizeof(producer_name));
 

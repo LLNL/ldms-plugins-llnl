@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <ldms/ldms.h>
 #include <ldms/ldmsd.h>
+#include "config.h"
 #include "lustre_ost.h"
 #include "lustre_ost_general.h"
 #include "lustre_ost_job_stats.h"
@@ -264,7 +265,7 @@ static struct ldmsd_sampler ost_job_stats_plugin = {
 struct ldmsd_plugin *get_plugin(ldmsd_msg_log_f pf)
 {
         log_fn = pf;
-        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called\n");
+        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called ("PACKAGE_STRING")\n");
         rbt_init(&ost_tree, string_comparator);
         gethostname(producer_name, sizeof(producer_name));
 

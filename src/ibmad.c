@@ -21,6 +21,7 @@
 #include <umad.h>
 #include <iba/ib_types.h>
 
+#include "config.h"
 #include "jobid_helper.h"
 
 #define _GNU_SOURCE
@@ -591,7 +592,7 @@ static struct ldmsd_sampler ibmad_plugin = {
 struct ldmsd_plugin *get_plugin(ldmsd_msg_log_f pf)
 {
         log_fn = pf;
-        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called\n");
+        log_fn(LDMSD_LDEBUG, SAMP" get_plugin() called ("PACKAGE_STRING")\n");
         rbt_init(&metrics_tree, string_comparator);
         gethostname(producer_name, sizeof(producer_name));
 	conf.schema_name = strdup("llnl_ibmad");
