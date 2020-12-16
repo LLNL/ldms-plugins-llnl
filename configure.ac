@@ -57,7 +57,10 @@ AS_IF([test "x$HAVE_LIBLDMS" != xyes],
 	[AC_MSG_ERROR([libldms or ldms/ldms.h not found])])
 
 # ldms_set_publish/unplish are not exported until ovis v4
-AC_CHECK_DECLS([ldms_set_publish],[],[],[#include <ldms/ldms.h>])
+AC_CHECK_DECLS([ldms_set_publish],
+               [],
+	       [AC_MSG_ERROR([ldms_set_publish() not found in ldms.h (OVIS 4.3.X or newer required)])],
+	       [#include <ldms/ldms.h>])
 
 ]) dnl not enable_dist
 

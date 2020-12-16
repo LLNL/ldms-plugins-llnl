@@ -304,9 +304,7 @@ static struct metric_data *ibmad_metric_create(const char *instance,
 		goto out4;
 	}
 
-#if HAVE_DECL_LDMS_SET_PUBLISH
         ldms_set_publish(data->metric_set);
-#endif
         rbn_init(&data->metrics_node, data->instance);
 
         return data;
@@ -324,9 +322,7 @@ out1:
 static void ibmad_metric_destroy(struct metric_data *data)
 {
         log_fn(LDMSD_LDEBUG, SAMP" ibmad_destroy() %s\n", data->instance);
-#if HAVE_DECL_LDMS_SET_PUBLISH
         ldms_set_unpublish(data->metric_set);
-#endif
         ldms_set_delete(data->metric_set);
 	_port_close(data);
         free(data->instance);
