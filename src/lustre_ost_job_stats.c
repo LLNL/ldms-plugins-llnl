@@ -227,7 +227,7 @@ void ost_job_stats_sample(const char *producer_name, const char *fs_name,
                 int rc;
                 int index;
 
-                rc = sscanf(buf, " - job_id: %s", str1);
+                rc = sscanf(buf, " - job_id: %64[^\n]", str1);
                 if (rc == 1) {
                         struct rbn *rbn;
 
