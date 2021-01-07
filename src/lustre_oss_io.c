@@ -122,7 +122,6 @@ ldms_set_t oss_create(const char *producer_name, const char *oss_name)
 
 static void oss_io_create(const char *oss_name, const char *basedir)
 {
-        //struct oss_io_data *oss_io;
         char path_tmp[PATH_MAX]; 
         char *state;
 
