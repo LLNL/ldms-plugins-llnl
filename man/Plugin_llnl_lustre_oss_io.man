@@ -1,0 +1,53 @@
+.TH man 7 "7 Jan 2021" "LDMS Plugin" "LLNL Plugin for LDMS"
+
+.SH NAME
+Plugin_llnl_lustre_oss_io - man page for the LDMS llnl_lustre_oss_io plugin
+
+.SH SYNOPSIS
+Within ldmsd_controller or a configuration file:
+.br
+config name=llnl_lustre_oss_io
+
+.SH DESCRIPTION
+With LDMS (Lightweight Distributed Metric Service), plugins for the ldmsd (ldms daemon) are configured via ldmsd_controller
+or a configuration file.
+
+The metric sets using schema llnl_lustre_oss_io will have a producer name set to the hostname. The data for these metrics sets come from the data in /sys/kernel/debug/lustre/ost/OSS/ost_io/stats.
+
+This plugin currently employs zero configuration. Any user-supplied configuration values will be ignored.  Future versions may add
+configuration options.
+
+This plugin work with Lustre version 2.12.
+
+NOTE: This plugin is only expected to be fully function in an ovis v4 release
+in which the ldms_set_delete() function is fixed.  (Which specific v4 release
+will have the fix is unknown at the time of writing.)
+
+.SH CONFIGURATION ATTRIBUTE SYNTAX
+
+.TP
+.BR config
+name=<plugin_name>
+.br
+configuration line
+.RS
+.TP
+name=<plugin_name>
+.br
+This MUST be llnl_lustre_oss_io.
+.RE
+
+.SH BUGS
+No known bugs.
+
+.SH EXAMPLES
+.PP
+Within ldmsd_controller or a configuration file:
+.nf
+load name=llnl_lustre_oss_io
+config name=llnl_lustre_oss_io
+start name=llnl_lustre_oss_io interval=1000000
+.fi
+
+.SH SEE ALSO
+ldmsd(8), ldms_quickstart(7), ldmsd_controller(8), ldms_sampler_base(7)
