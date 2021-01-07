@@ -49,8 +49,8 @@ ldmsplugin_LTLIBRARIES += libllnl_lustre_client.la
 # lustre oss io plugin
 libllnl_lustre_oss_io_la_SOURCES = \
 	lustre_oss_io.c \
-	lustre_oss_io.h \
-libllnl_lustre_oss_io_la_LIBADD = libjobid_helper.la $(COMMON_LIBADD)
+	lustre_oss_io.h
+libllnl_lustre_oss_io_la_LIBADD = $(COMMON_LIBADD)
 libllnl_lustre_oss_io_la_LDFLAGS = $(COMMON_LDFLAGS)
 ldmsplugin_LTLIBRARIES += libllnl_lustre_oss_io.la
 

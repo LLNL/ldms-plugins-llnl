@@ -17,7 +17,7 @@
 #include <ldms/ldms.h>
 #include <ldms/ldmsd.h>
 #include "config.h"
-#include "lustre_ost_io.h"
+#include "lustre_oss_io.h"
 
 #define _GNU_SOURCE
 
@@ -40,14 +40,14 @@ static ldms_schema_t oss_io_schema;
 ldmsd_msg_log_f log_fn;
 char producer_name[LDMS_PRODUCER_NAME_MAX];
 
-static struct oss_io_data oss_io;
-
 struct oss_io_data {
         char *name;
         char *path;
         char *stats_path;
         ldms_set_t oss_io_metric_set; /* a pointer */
 };
+
+static struct oss_io_data *oss_io = NULL;
 
 static int string_comparator(void *a, const void *b)
 {
@@ -71,7 +71,7 @@ void oss_io_schema_fini()
         }
 }
 
-int oss_io_schema_init(const char *producer_name)
+int oss_io_schema_init()
 {
         ldms_schema_t sch;
         int rc;
@@ -120,9 +120,9 @@ ldms_set_t oss_create(const char *producer_name, const char *oss_name)
         return set;
 }
 
-static struct oss_io_data *oss_io_create(const char *oss_name, const char *basedir)
+static void oss_io_create(const char *oss_name, const char *basedir)
 {
-        struct oss_io_data *oss_io;
+        //struct oss_io_data *oss_io;
         char path_tmp[PATH_MAX]; 
         char *state;
 
@@ -147,7 +147,7 @@ static struct oss_io_data *oss_io_create(const char *oss_name, const char *based
         if (oss_io->oss_io_metric_set == NULL)
                 goto out5;
 
-        return oss_io;
+        return;
 
 out5:
         free(oss_io->stats_path);
@@ -158,7 +158,7 @@ out3:
 out2:
         free(oss_io);
 out1:
-        return NULL;
+        return;
 }
 
 static void oss_io_destroy()
@@ -202,8 +202,6 @@ static void oss_io_stats_sample(const char *stats_path,
         }
 
         ldms_transaction_begin(oss_io_metric_set);
-        index = ldms_metric_by_name(oss_io_metric_set, "oss");
-        ldms_metric_set_u64(oss_io_metric_set, index, producer_name);
         while (fgets(buf, sizeof(buf), sf)) {
                 uint64_t val1, val2;
                 int rc;
@@ -247,6 +245,9 @@ static int sample(struct ldmsd_sampler *self)
                 }
         }
 
+        if (oss_io == NULL) {
+                oss_io_create(producer_name, OSS_IO_PATH);
+        }
         oss_io_stats_sample(oss_io->stats_path, oss_io->oss_io_metric_set);
 
         return 0;
