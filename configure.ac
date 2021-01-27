@@ -36,7 +36,7 @@ AS_IF([test "x$with_dcgm" != xno],
          ])],
       [have_dcgm=false])
 
-AC_ARG_WITH([ibmad],
+AC_ARG_WITH([infiniband],
   [AS_HELP_STRING([--with-infiniband],
     [Include infiniband plugins @<:@default=check@:>@])],
   [],
